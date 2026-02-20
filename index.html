@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ana Sayfa</title>
+</head>
+<body>
+
+    <div id="content" style="display: none;">
+        <h1>Hoş geldin!</h1>
+        <p>Giriş başarılı olduğu için bu içeriği görebiliyorsun.</p>
+        <button onclick="logout()">Çıkış Yap</button>
+    </div>
+
+    <script>
+        // Sayfa yüklendiğinde çalışacak kontrol mekanizması
+        (function checkAuth() {
+            const userStatus = localStorage.getItem('auth');
+
+            if (userStatus === 'ugurbirey') {
+                // Eğer doğru yazıyorsa içeriği göster
+                document.getElementById('content').style.display = 'block';
+            } else {
+                // Yazmıyorsa login.html sayfasına yönlendir
+                window.location.href = 'login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.removeItem('auth');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
 
