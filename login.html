@@ -2,23 +2,114 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Giriş Yap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Güvenli Giriş Paneli</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        .login-box {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #0f3460;
+        }
+        h2 { text-align: center; margin-bottom: 30px; color: #4ecca3; }
+        .input-group { margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #0f3460;
+            border: 1px solid #1a1a2e;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: #4ecca3; }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4ecca3;
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background: #45b291; transform: translateY(-2px); }
+        #error-msg {
+            color: #ff4d4d;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Giriş Sayfası</h1>
-    <p>Lütfen ana sayfaya erişmek için butona tıkla.</p>
-    
-    <button id="loginBtn">Sisteme "ugurbirey" Yaz ve Giriş Yap</button>
 
-    <script>
-        document.getElementById('loginBtn').addEventListener('click', function() {
-            // LocalStorage'a veriyi yazıyoruz
+<div class="login-box">
+    <h2>Giriş Yap</h2>
+    <div class="input-group">
+        <input type="text" id="username" placeholder="Kullanıcı Adı">
+    </div>
+    <div class="input-group">
+        <input type="password" id="password" placeholder="Şifre">
+    </div>
+    <button onclick="checkCredentials()">Sisteme Gir</button>
+    <div id="error-msg"></div>
+</div>
+
+<script>
+    async function getHash(text) {
+        const msgBuffer = new TextEncoder().encode(text);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function checkCredentials() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        const errorDiv = document.getElementById('error-msg');
+
+        const userHash = await getHash(user);
+        const passHash = await getHash(pass);
+
+        
+        const targetUser1 = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; 
+        const targetPass1 = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+
+        const targetUser2 = "3994966606015694273893699478f6916c52a325091724f926071852d2f337c6";
+        const targetPass2 = "9a9004519302ba479c76646bc163821013446961805b63484f937d2f4448577a";
+
+        if (userHash === targetUser1 && passHash === targetPass1) {
             localStorage.setItem('auth', 'ugurbirey');
-            
-            // Ana sayfaya yönlendiriyoruz
-            alert('Değer atandı! Şimdi ana sayfaya gidiyorsun.');
             window.location.href = 'index.html';
-        });
-    </script>
+        } 
+        else if (userHash === targetUser2 && passHash === targetPass2) {
+            localStorage.setItem('auth', 'ozel');
+            window.location.href = 'index.html';
+        } 
+        else {
+            errorDiv.innerText = "Kimlik bilgileri hatalı!";
+        }
+    }
+</script>
+
 </body>
 </html>
