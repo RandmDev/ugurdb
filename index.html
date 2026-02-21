@@ -3,131 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yönetim Paneli</title>
+    <title>Resim Görüntüleme Paneli</title>
     <style>
-        /* Modern CSS Temelleri */
+        /* Login Sayfasıyla Aynı Renk Paleti ve Reset */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at bottom left, #1e293b, #0f172a);
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            color: #f8fafc;
-            overflow: hidden;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
         }
 
-        /* Ana İçerik Kartı */
+        /* Ana Panel - Glassmorphism */
         #content {
             background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 40px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 30px;
             border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            width: 95%;
+            max-width: 800px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: slideUp 0.6s ease-out;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Resim Görüntüleme Alanı */
+        .image-container {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* İstediğin Resim Komutu */
         #resim {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-            object-fit: cover;
-            border: 3px solid #4ecca3;
-            padding: 5px;
-            background: rgba(78, 204, 163, 0.1);
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+            transition: transform 0.3s ease;
         }
 
-        h1 {
-            font-size: 32px;
-            margin-bottom: 15px;
-            color: #4ecca3;
+        #resim:hover {
+            transform: scale(1.02);
         }
 
-        p {
-            color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        /* Buton Grubu */
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
         }
 
-        /* Yetki Rozeti */
-        .badge {
-            display: inline-block;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Çıkış Butonu */
-        .logout-btn {
-            padding: 12px 30px;
-            background: #ff4d4d;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
+        button {
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 14px;
+            border: none;
+        }
+
+        /* Çıkış Butonu (Kırmızı Tonlu) */
+        .logout-btn {
+            background: rgba(251, 113, 133, 0.2);
+            color: #fb7185;
+            border: 1px solid #fb7185;
         }
 
         .logout-btn:hover {
-            background: #ff3333;
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+            background: #fb7185;
+            color: white;
+            box-shadow: 0 0 20px rgba(251, 113, 133, 0.4);
+        }
+
+        /* Özel/Vip Buton (Mavi Tonlu - Login'deki buton rengi) */
+        .action-btn {
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
     </style>
 </head>
 <body>
 
     <div id="content" style="display: none;">
-        <img id="resim" src="https://via.placeholder.com/100" alt="Kullanıcı">
         
-        <div id="statusBadge" class="badge">Erişim Onaylandı</div>
-        
-        <h1 id="welcomeTitle">Hoş geldin!</h1>
-        <p id="welcomeDesc">Giriş başarılı olduğu için bu özel içeriği ve paneli görebiliyorsun.</p>
-        
-        <button class="logout-btn" onclick="logout()">Güvenli Çıkış</button>
+        <div class="image-container">
+            <img id="resim" src="https://via.placeholder.com/600x400/1e293b/38bdf8?text=Resim+Burada+Gözükecek" alt="Görüntülenen Resim">
+        </div>
+
+        <div class="controls">
+            <button class="action-btn" onclick="alert('Resim indiriliyor veya işlem yapılıyor...')">Resmi İşle</button>
+            <button class="logout-btn" onclick="logout()">Güvenli Çıkış</button>
+        </div>
+
     </div>
 
     <script>
         (function checkAuth() {
             const userStatus = localStorage.getItem('auth');
             const contentDiv = document.getElementById('content');
-            const title = document.getElementById('welcomeTitle');
-            const badge = document.getElementById('statusBadge');
 
-            if (userStatus === 'ugurbirey') {
+            // Sadece ugurbirey veya ozel yazıyorsa göster
+            if (userStatus === 'ugurbirey' || userStatus === 'ozel') {
                 contentDiv.style.display = 'block';
-                title.innerText = "Selam, Uğur!";
-                badge.style.color = "#4ecca3";
-            } 
-            else if (userStatus === 'ozel') {
-                contentDiv.style.display = 'block';
-                title.innerText = "Selam, Özel Üye!";
-                badge.innerText = "VIP ERİŞİM";
-                badge.style.color = "#facc15"; // Altın sarısı
-                document.getElementById('resim').style.borderColor = "#facc15";
-            }
-            else {
-                // Yetkisiz girişi engelle ve şutla
+                
+                // Eğer "ozel" girişiyse çerçeve rengini biraz daha vurgulu yapalım
+                if (userStatus === 'ozel') {
+                    document.getElementById('resim').style.border = "2px solid #38bdf8";
+                }
+            } else {
                 window.location.href = 'login.html';
             }
         })();
